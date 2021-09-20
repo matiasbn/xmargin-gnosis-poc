@@ -5,7 +5,6 @@ import "hardhat/console.sol";
 
 contract OwnedContract {
     address public owner;
-
     string public message;
 
     constructor() {
