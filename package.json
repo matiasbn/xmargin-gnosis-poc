@@ -4,7 +4,7 @@
   "description": "XMargin Gnosis Multisig Safe POC",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "hardhat deploy"
   },
   "repository": {
     "type": "git",
@@ -18,12 +18,13 @@
   "homepage": "https://github.com/matiasbn/xmargin-gnosis-poc#readme",
   "dependencies": {
     "@gnosis.pm/safe-core-sdk": "^0.3.1",
+    "@openzeppelin/contracts": "^4.3.2",
     "chai-ethers": "^0.0.1",
-    "hardhat": "^2.6.4",
-    "hardhat-deploy": "^0.9.1"
+    "hardhat": "^2.6.4"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@gnosis.pm/mock-contract": "^4.0.0",
+    "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.10",
     "@nomiclabs/hardhat-etherscan": "^2.1.6",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@typechain/ethers-v5": "^7.1.0",
@@ -42,6 +43,7 @@
     "eslint-plugin-promise": "^5.1.0",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.7",
+    "hardhat-deploy": "^0.9.1",
     "hardhat-gas-reporter": "^1.0.4",
     "prettier": "^2.4.1",
     "prettier-plugin-solidity": "^1.0.0-beta.13",

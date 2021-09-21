@@ -6,6 +6,7 @@ import "@nomiclabs/hardhat-waffle";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "@typechain/hardhat";
+import "hardhat-deploy";
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
@@ -14,7 +15,13 @@ import "@typechain/hardhat";
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.8.4",
+  solidity: {
+    compilers: [
+      { version: "0.6.12" },
+      { version: "0.5.17" },
+      { version: "0.8.0" },
+    ],
+  },
   networks: {
     hardhat: {
       initialBaseFeePerGas: 0, // workaround from https://github.com/sc-forks/solidity-coverage/issues/652#issuecomment-896330136 . Remove when that issue is closed.
@@ -34,5 +41,8 @@ module.exports = {
   },
   typechain: {
     alwaysGenerateOverloads: false,
+  },
+  namedAccounts: {
+    deployer: 0,
   },
 };
