@@ -22,9 +22,19 @@ module.exports = {
       { version: "0.8.0" },
     ],
   },
+  defaultNetwork: "localhost",
   networks: {
+    localhost: {
+      chainId: 1337,
+      accounts: {
+        mnemonic: process.env.DEVELOP_MNEMONIC,
+      },
+      url: "http://localhost:8545",
+    },
     hardhat: {
       initialBaseFeePerGas: 0, // workaround from https://github.com/sc-forks/solidity-coverage/issues/652#issuecomment-896330136 . Remove when that issue is closed.
+      allowUnlimitedContractSize: true,
+      saveDeployments: true,
     },
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
@@ -44,5 +54,10 @@ module.exports = {
   },
   namedAccounts: {
     deployer: 0,
+  },
+  paths: {
+    deploy: "deploy",
+    deployments: "deployments",
+    imports: "imports",
   },
 };

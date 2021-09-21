@@ -1,42 +1,75 @@
 import { expect } from "./chai-setup";
 import { OwnedContract } from "@typechain/OwnedContract";
-import { ethers } from "hardhat";
 import Safe, {
   SafeFactory,
   SafeAccountConfig,
   EthersAdapter,
 } from "@gnosis.pm/safe-core-sdk";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { MultiSend } from "@typechain/MultiSend";
+import { GnosisSafe } from "@typechain/GnosisSafe";
+import { GnosisSafeProxyFactory } from "@typechain/GnosisSafeProxyFactory";
+import { Signer } from "ethers";
+import { AddressZero } from "@ethersproject/constants";
+const hre = require("hardhat");
+const { ethers, deployments } = hre;
+
+type Fixture = {
+  multiSend: MultiSend;
+  gnosisSafe: GnosisSafe;
+  safeProxyFactory: GnosisSafeProxyFactory;
+  signer1;
+  signer2;
+};
+
+const setup = deployments.createFixture(async () => {
+  const [signer1, signer2] = await ethers.getSigners();
+  await deployments.fixture("main-suite");
+  const gnosisSafe: GnosisSafe = await ethers.getContract("GnosisSafe");
+  const multiSend: MultiSend = await ethers.getContract("MultiSend");
+  const safeProxyFactory: GnosisSafeProxyFactory = await ethers.getContract(
+    "GnosisSafeProxyFactory"
+  );
+  return {
+    multiSend,
+    gnosisSafe,
+    safeProxyFactory,
+    signer1,
+    signer2,
+  };
+});
 
 describe("OwnedContract", function () {
-  let signer1: SignerWithAddress;
   let ethAdapterOwner1;
-  let signer2: SignerWithAddress;
   let ethAdapterOwner2;
+  let fixture: Fixture;
 
   before(async () => {
-    [signer1, signer2] = await ethers.getSigners();
+    fixture = await setup();
     ethAdapterOwner1 = new EthersAdapter({
       ethers,
-      signer: signer1,
+      signer: fixture.signer1,
     });
     ethAdapterOwner2 = new EthersAdapter({
       ethers,
-      signer: signer2,
+      signer: fixture.signer2,
     });
   });
 
-  it("Should create a safe properly", async function () {
-    console.log(ethers.getDefaultProvider());
+  it("Should create a Safe properly", async function () {
+    const { signer1, signer2 } = fixture;
     const safeFactory = await SafeFactory.create({
       ethAdapter: ethAdapterOwner1,
-      // contractNetworks: {
-      //   [ethers.pr]
-      // },
+      contractNetworks: {
+        [hre.network.config.chainId]: {
+          multiSendAddress: fixture.multiSend.address,
+          safeMasterCopyAddress: fixture.gnosisSafe.address,
+          safeProxyFactoryAddress: fixture.safeProxyFactory.address,
+        },
+      },
     });
 
     const owners = [signer1.address, signer2.address];
-    const threshold = 2;
+    const threshold = 1;
     const safeAccountConfig: SafeAccountConfig = { owners, threshold };
 
     const safeSdk: Safe = await safeFactory.deploySafe(safeAccountConfig);
