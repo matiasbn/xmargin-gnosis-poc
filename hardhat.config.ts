@@ -27,7 +27,8 @@ module.exports = {
     localhost: {
       chainId: 1337,
       accounts: {
-        mnemonic: process.env.DEVELOP_MNEMONIC,
+        mnemonic:
+          "myth like bonus scare over problem client lizard pioneer submit female collect",
       },
       url: "http://localhost:8545",
     },

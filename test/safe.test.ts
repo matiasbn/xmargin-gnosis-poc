@@ -1,5 +1,4 @@
 import { expect } from "./chai-setup";
-import { OwnedContract } from "@typechain/OwnedContract";
 import Safe, {
   SafeFactory,
   SafeAccountConfig,
@@ -8,8 +7,6 @@ import Safe, {
 import { MultiSend } from "@typechain/MultiSend";
 import { GnosisSafe } from "@typechain/GnosisSafe";
 import { GnosisSafeProxyFactory } from "@typechain/GnosisSafeProxyFactory";
-import { Signer } from "ethers";
-import { AddressZero } from "@ethersproject/constants";
 const hre = require("hardhat");
 const { ethers, deployments } = hre;
 
@@ -38,9 +35,9 @@ const setup = deployments.createFixture(async () => {
   };
 });
 
-describe("OwnedContract", function () {
-  let ethAdapterOwner1;
-  let ethAdapterOwner2;
+describe("GnosisSafe", function () {
+  let ethAdapterOwner1: EthersAdapter;
+  let ethAdapterOwner2: EthersAdapter;
   let fixture: Fixture;
 
   before(async () => {
@@ -57,6 +54,7 @@ describe("OwnedContract", function () {
 
   it("Should create a Safe properly", async function () {
     const { signer1, signer2 } = fixture;
+    console.log(await ethAdapterOwner1.getSignerAddress());
     const safeFactory = await SafeFactory.create({
       ethAdapter: ethAdapterOwner1,
       contractNetworks: {
